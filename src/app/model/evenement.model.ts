@@ -1,7 +1,10 @@
+
+import { Lieu } from './lieu.model';
+
 export class Evenement {
   idEvenement?: number;
   nomEvenement?: string;
-  lieuEvenement?: string;
   prixEvenement?: number;
   dateEvenement?: Date;
+  lieu!: Lieu;
 }

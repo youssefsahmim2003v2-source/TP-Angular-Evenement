@@ -1,11 +1,28 @@
 
 import { Injectable } from '@angular/core';
 import { Evenement } from '../model/evenement.model';
+import { Lieu } from '../model/lieu.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EvenementService {
+  
+  
+listeLieux(): Lieu[] {
+  return this.lieux;
+}
+
+consulterLieu(id: number): Lieu {
+  return this.lieux.find(lieu => lieu.idLieu == id)!;
+}
+
+
+  lieux: Lieu[] = [
+  { idLieu: 1, nomLieu: 'Hammamet' },
+  { idLieu: 2, nomLieu: 'Nabeul' },
+  { idLieu: 3, nomLieu: 'Tunis' }
+];
  
   evenements: Evenement[];
  updateEvenement(evenement: Evenement): void {
@@ -19,28 +36,28 @@ export class EvenementService {
 }
   constructor() {
     this.evenements = [
-      {
-        idEvenement: 1,
-        nomEvenement: "Festival de musique",
-        lieuEvenement: "Hammamet",
-        prixEvenement: 35,
-        dateEvenement: new Date("01/14/2026")
-      },
-      {
-        idEvenement: 2,
-        nomEvenement: "Conférence informatique",
-        lieuEvenement: "Nabeul",
-        prixEvenement: 20,
-        dateEvenement: new Date("12/17/2026")
-      },
-      {
-        idEvenement: 3,
-        nomEvenement: "Salon des jeux vidéo",
-        lieuEvenement: "Tunis",
-        prixEvenement: 15,
-        dateEvenement: new Date("02/20/2027")
-      }
-    ];
+  {
+    idEvenement: 1,
+    nomEvenement: "Festival de musique",
+    prixEvenement: 35,
+    dateEvenement: new Date("01/14/2026"),
+    lieu: this.lieux[0]
+  },
+  {
+    idEvenement: 2,
+    nomEvenement: "Conférence informatique",
+    prixEvenement: 20,
+    dateEvenement: new Date("12/17/2026"),
+    lieu: this.lieux[1]
+  },
+  {
+    idEvenement: 3,
+    nomEvenement: "Salon des jeux vidéo",
+    prixEvenement: 15,
+    dateEvenement: new Date("02/20/2027"),
+    lieu: this.lieux[2]
+  }
+];
   }
 
   listeEvenements(): Evenement[] {
