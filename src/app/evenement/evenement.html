@@ -1,0 +1,65 @@
+<div class="container">
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Id</th>
+        <th>Nom</th>
+        <th>Lieu</th>
+        <th>Prix</th>
+        <th>Date de l'événement</th>
+        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <!--<tbody>
+          <tr *ngFor="let evenement of evenements">
+            <td>{{ evenement }}</td>
+            </tr>
+        </tbody> -->
+
+                <tbody>
+                   @for (evenement of evenements;
+                   
+                    track evenement.idEvenement; 
+                    let pos=$index ; let nbr=$count;
+                     let first = $first;
+                     let last = $last) {
+       
+                    <tr>
+            <td>{{ pos+1}}</td>
+          <td>{{ evenement.idEvenement }}</td>
+          <td>{{ evenement.nomEvenement }}</td>
+          <td>{{ evenement.lieuEvenement }}</td>
+          <td>{{ evenement.prixEvenement }}</td>
+          <td>{{ evenement.dateEvenement | date:'dd/MM/yyyy' }}</td>
+          <td>
+  <button
+    class="btn btn-danger"
+    (click)="supprimerEvenement(evenement)">
+    Supprimer
+  </button>
+</td>
+<td>
+  <a class="btn btn-success"
+   [routerLink]="['/update-evenement', evenement.idEvenement]">
+  Modifier
+</a>
+</td>
+        
+        </tr>
+         @if(last) 
+{  
+            <h1>{{nbr}} evenements </h1>} 
+      }
+      @empty { 
+<h1>Aucun evenement trouvé !</h1> 
+} 
+                </tbody>
+                
+            </table>
+        </div>
+    </div>
+</div>
