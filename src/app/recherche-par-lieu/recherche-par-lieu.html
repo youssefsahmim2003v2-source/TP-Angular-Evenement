@@ -1,0 +1,76 @@
+<div class="container">
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Recherche Par Lieu</h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="mb-4">
+                <label for="lieu" class="form-label fw-bold">
+                    Choisir un lieu :
+                </label>
+
+                <select
+                    id="lieu"
+                    class="form-select"
+                    [(ngModel)]="idLieu"
+                    (change)="onChange()">
+
+                    <option [ngValue]="undefined">
+                        -- Choisir un lieu --
+                    </option>
+
+                    @for (lieu of lieux; track lieu.idLieu) {
+                        <option [ngValue]="lieu.idLieu">
+                            {{ lieu.nomLieu }}
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>N°</th>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Lieu</th>
+                        <th>Prix</th>
+                        <th>Date de l'événement</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (
+                        evenement of evenementsFiltres;
+                        track evenement.idEvenement;
+                        let pos = $index
+                    ) {
+                        <tr>
+                            <td>{{ pos + 1 }}</td>
+                            <td>{{ evenement.idEvenement }}</td>
+                            <td>{{ evenement.nomEvenement }}</td>
+                            <td>{{ evenement.lieu?.nomLieu ?? 'PAS DE LIEU' }}</td>
+                            <td>{{ evenement.prixEvenement }}</td>
+                            <td>{{ evenement.dateEvenement | date:'dd/MM/yyyy' }}</td>
+                        </tr>
+                    }
+
+                    @empty {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                Aucun événement trouvé !
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="text-end text-muted">
+                Total : {{ evenementsFiltres.length }} événement(s)
+            </div>
+
+        </div>
+    </div>
+</div>
