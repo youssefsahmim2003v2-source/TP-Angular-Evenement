@@ -1,7 +1,9 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Gestion des Événements</a>
+        <a class="navbar-brand" routerLink="/event">
+            Gestion des Événements
+        </a>
 
         <button class="navbar-toggler" type="button"
             data-bs-toggle="collapse"
@@ -13,10 +15,12 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <!-- Left menu -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" routerLink="/event">
-                        
+                    <a class="nav-link active" routerLink="/event">
                         Accueil
                     </a>
                 </li>
@@ -28,37 +32,85 @@
                         Événements
                     </a>
 
-                    <ul class="dropdown-menu" aria-labelledby="evenementDropdown">
+                    <ul class="dropdown-menu"
+                        aria-labelledby="evenementDropdown">
+
+                        <!-- Only ADMIN can add an event -->
+                        @if (authService.isAdmin()) {
+                            <li>
+                                <a class="dropdown-item"
+                                   routerLink="/add-evenement">
+                                    Ajouter un événement
+                                </a>
+                            </li>
+                        }
+
                         <li>
-                            <a class="dropdown-item" routerLink="/add-evenement">
-                                Ajouter un événement
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" routerLink="/event">
                                 Lister les événements
                             </a>
                         </li>
                     </ul>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/rechercheParLieu">
+                        🔍 Recherche Par Lieu
+                    </a>
+                </li>
+
             </ul>
 
+            <!-- Right menu: Authentication -->
             <ul class="navbar-nav ms-auto m-2">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#"
-                        id="userDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        [username]
-                    </a>
-<a routerLink="/rechercheParLieu">Recherche Par Lieu</a>
-                    <ul class="dropdown-menu dropdown-menu-end"
-                        aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="#">Connexion</a></li>
-                        <li><a class="dropdown-item" href="#">Déconnexion</a></li>
-                        <li><a class="dropdown-item" href="#">Profil</a></li>
-                    </ul>
+
+                    @if (authService.isloggedIn) {
+
+                        <a class="nav-link dropdown-toggle" href="#"
+                            id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            [{{ authService.loggedUser }}]
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end"
+                            aria-labelledby="userDropdown">
+
+                            @if (authService.isAdmin()) {
+                                <li>
+                                    <span class="dropdown-item-text">
+                                        Administrateur
+                                    </span>
+                                </li>
+                            } @else {
+                                <li>
+                                    <span class="dropdown-item-text">
+                                        Utilisateur
+                                    </span>
+                                </li>
+                            }
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+                                <button class="dropdown-item"
+                                    (click)="onLogout()">
+                                    Déconnexion
+                                </button>
+                            </li>
+                        </ul>
+
+                    } @else {
+
+                        <a class="nav-link" routerLink="/login">
+                            Connexion
+                        </a>
+
+                    }
+
                 </li>
             </ul>
+
         </div>
     </div>
 </nav>

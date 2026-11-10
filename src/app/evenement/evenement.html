@@ -6,11 +6,11 @@
                     <tr>
                         <th>N°</th>
                         <th>Id</th>
-        <th>Nom</th>
-        <th>Lieu</th>
-        <th>Prix</th>
-        <th>Date de l'événement</th>
-        <th>Actions</th>
+                        <th>Nom</th>
+                        <th>Lieu</th>
+                        <th>Prix</th>
+                        <th>Date de l'événement</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
 
@@ -21,44 +21,42 @@
         </tbody> -->
 
                 <tbody>
-                   @for (evenement of evenements;
-                   
-                    track evenement.idEvenement; 
+                    @for (evenement of evenements;
+
+                    track evenement.idEvenement;
                     let pos=$index ; let nbr=$count;
-                     let first = $first;
-                     let last = $last) {
-       
+                    let first = $first;
+                    let last = $last) {
+
                     <tr>
-            <td>{{ pos+1}}</td>
-          <td>{{ evenement.idEvenement }}</td>
-          <td>{{ evenement.nomEvenement }}</td>
-          <td>{{ evenement.lieu.nomLieu }}</td>
-          <td>{{ evenement.prixEvenement }}</td>
-          <td>{{ evenement.dateEvenement | date:'dd/MM/yyyy' }}</td>
-          <td>
-  <button
-    class="btn btn-danger"
-    (click)="supprimerEvenement(evenement)">
-    Supprimer
-  </button>
-</td>
-<td>
-  <a class="btn btn-success"
-   [routerLink]="['/update-evenement', evenement.idEvenement]">
-  Modifier
-</a>
-</td>
-        
-        </tr>
-         @if(last) 
-{  
-            <h1>{{nbr}} evenements </h1>} 
-      }
-      @empty { 
-<h1>Aucun evenement trouvé !</h1> 
-} 
+                        <td>{{ pos+1}}</td>
+                        <td>{{ evenement.idEvenement }}</td>
+                        <td>{{ evenement.nomEvenement }}</td>
+                        <td>{{ evenement.lieu.nomLieu }}</td>
+                        <td>{{ evenement.prixEvenement }}</td>
+                        <td>{{ evenement.dateEvenement | date:'dd/MM/yyyy' }}</td>
+                        <td>
+                            @if (authService.isAdmin()) {
+                            <button class="btn btn-danger" (click)="supprimerEvenement(evenement)">
+                                Supprimer
+                            </button>
+
+                            <a class="btn btn-success ms-2" [routerLink]="['/update-evenement', evenement.idEvenement]">
+                                Modifier
+                            </a>
+                            }
+                        </td>
+
+                    </tr>
+                    @if(last)
+                    {
+                    <h1>{{nbr}} evenements </h1>}
+                    }
+                    @empty {
+                    <h1>Aucun evenement trouvé !</h1>
+                    }
                 </tbody>
-                
+
             </table>
         </div>
     </div>
