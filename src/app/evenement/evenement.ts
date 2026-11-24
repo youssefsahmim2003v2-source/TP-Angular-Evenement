@@ -1,4 +1,4 @@
-
+import { ChangeDetectorRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Evenement } from '../model/evenement.model';
@@ -14,26 +14,24 @@ import { AuthService } from '../services/auth';
 export class EvenementComponent implements OnInit {
   evenements: Evenement[] = [];
 
-  constructor(
-    private evenementService: EvenementService,
-    public authService: AuthService
-  ) {}
+ constructor(
+  private evenementService: EvenementService,
+  public authService: AuthService,
+  private cdr: ChangeDetectorRef
+) {}
 
   ngOnInit(): void {
     this.chargerEvenements();
   }
 
 chargerEvenements(): void {
-  console.log('Loading events...');
-
   this.evenementService.listeEvenements().subscribe({
     next: (data) => {
-      console.log('API RESPONSE:', data);
-
       this.evenements = data;
 
-      console.log('COMPONENT ARRAY:', this.evenements);
-      console.log('ARRAY LENGTH:', this.evenements.length);
+      console.log('EVENTS:', this.evenements.length);
+
+      this.cdr.detectChanges();
     },
     error: (err) => {
       console.error('ERROR:', err);
