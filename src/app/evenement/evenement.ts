@@ -12,29 +12,48 @@ import { AuthService } from '../services/auth';
   templateUrl: './evenement.html',
 })
 export class EvenementComponent implements OnInit {
-  evenements: Evenement[];
+  evenements: Evenement[] = [];
 
   constructor(
     private evenementService: EvenementService,
     public authService: AuthService
-  ) {
-    this.evenements = this.evenementService.listeEvenements();
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.chargerEvenements();
   }
 
-  supprimerEvenement(evenement: Evenement): void {
+chargerEvenements(): void {
+  console.log('Loading events...');
 
+  this.evenementService.listeEvenements().subscribe({
+    next: (data) => {
+      console.log('API RESPONSE:', data);
+
+      this.evenements = data;
+
+      console.log('COMPONENT ARRAY:', this.evenements);
+      console.log('ARRAY LENGTH:', this.evenements.length);
+    },
+    error: (err) => {
+      console.error('ERROR:', err);
+    }
+  });
+}
+
+  supprimerEvenement(evenement: Evenement): void {
     // Only ADMIN can delete
     if (!this.authService.isAdmin()) {
       return;
     }
 
-    const conf = confirm("Êtes-vous sûr ?");
+    const conf = confirm('Êtes-vous sûr ?');
 
     if (conf) {
-      this.evenementService.supprimerEvenement(evenement);
+      this.evenementService.supprimerEvenement(evenement.idEvenement!).subscribe(() => {
+        this.chargerEvenements();
+      });
     }
   }
 }
+

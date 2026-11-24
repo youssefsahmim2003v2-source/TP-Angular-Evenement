@@ -23,23 +23,49 @@ export class UpdateEvenementComponent implements OnInit {
     private evenementService: EvenementService
   ) {}
 
-  ngOnInit(): void {
-    const id = Number(this.activatedRoute.snapshot.params['id']);
+ngOnInit(): void {
 
-    this.lieux = this.evenementService.listeLieux();
-    this.currentEvenement =
-      this.evenementService.consulterEvenement(id);
+  const id = Number(this.activatedRoute.snapshot.params['id']);
 
-    this.updatedLieuId = this.currentEvenement.lieu.idLieu;
-  }
+  // Charger la liste des lieux
+  this.evenementService.listeLieux().subscribe(lieux => {
+    this.lieux = lieux._embedded.lieux;
+  });
+
+  // Charger l'événement à modifier
+  this.evenementService.consulterEvenement(id).subscribe(evenement => {
+    this.currentEvenement = evenement;
+
+    // Récupérer l'id du lieu associé
+    this.updatedLieuId = evenement.lieu.idLieu;
+  });
+}
 
   updateEvenement(): void {
-    this.currentEvenement.lieu =
-      this.evenementService.consulterLieu(this.updatedLieuId);
 
-    this.evenementService.updateEvenement(this.currentEvenement);
-    this.router.navigate(['event']);
+  const lieuSelectionne = this.lieux.find(
+    l => l.idLieu === Number(this.updatedLieuId)
+  );
+
+  if (!lieuSelectionne) {
+    alert('Veuillez choisir un lieu !');
+    return;
   }
+
+  this.currentEvenement.lieu = lieuSelectionne;
+
+  this.evenementService.updateEvenement(this.currentEvenement)
+    .subscribe({
+      next: () => {
+        alert('Événement modifié avec succès !');
+        this.router.navigate(['/event']);
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Erreur lors de la modification !');
+      }
+    });
+}
 
   onDateChange(value: string): void {
     this.currentEvenement.dateEvenement = value

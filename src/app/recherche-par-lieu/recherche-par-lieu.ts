@@ -11,22 +11,30 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './recherche-par-lieu.html',
   styles: ``,
 })
-export class RechercheParLieuComponent  implements OnInit {
-
+export class RechercheParLieuComponent implements OnInit {
   evenements: Evenement[] = [];
   evenementsFiltres: Evenement[] = [];
   lieux: Lieu[] = [];
-  idLieu!: number;
+  idLieu?: number;
 
   constructor(private evenementService: EvenementService) {}
 
   ngOnInit(): void {
-    this.lieux = this.evenementService.listeLieux();
-    this.evenements = this.evenementService.listeEvenements();
-    this.evenementsFiltres = this.evenements;
+    this.evenementService.listeLieux().subscribe(lieux => {
+      this.lieux = lieux._embedded.lieux;
+    });
+
+    this.evenementService.listeEvenements().subscribe(evenements => {
+      this.evenements = evenements;
+      this.evenementsFiltres = evenements;
+    });
   }
 
   onChange(): void {
+    if (this.idLieu === undefined || this.idLieu === null) {
+      this.evenementsFiltres = this.evenements;
+      return;
+    }
     this.evenementsFiltres = this.evenements.filter(
       evenement => evenement.lieu?.idLieu === Number(this.idLieu)
     );

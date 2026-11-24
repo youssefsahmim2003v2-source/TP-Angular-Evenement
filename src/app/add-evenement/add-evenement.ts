@@ -21,18 +21,42 @@ export class AddEvenement implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.lieux = this.evenementService.listeLieux();
+  
+
+ngOnInit(): void {
+  this.evenementService.listeLieux().subscribe(lieux => {
+    console.log(lieux);
+    this.lieux = lieux._embedded.lieux;
+  });
+}
+
+ addEvenement(): void {
+
+  const lieuSelectionne = this.lieux.find(
+    l => l.idLieu === Number(this.newIdLieu)
+  );
+
+  if (!lieuSelectionne) {
+    alert('Veuillez choisir un lieu !');
+    return;
   }
 
-  addEvenement(): void {
-    this.newEvenement.lieu =
-      this.evenementService.consulterLieu(this.newIdLieu);
+  this.newEvenement.lieu = lieuSelectionne;
 
-    this.evenementService.ajouterEvenement(this.newEvenement);
+  this.evenementService.ajouterEvenement(this.newEvenement)
+    .subscribe({
+      next: () => {
+        alert('Événement ajouté avec succès !');
+        this.router.navigate(['/event']);
+      },
+      error: (err) => {
+  console.error('HTTP ERROR:', err);
+  console.log('STATUS:', err.status);
+  console.log('ERROR BODY:', err.error);
+  console.log('MESSAGE:', err.message);
 
-    this.newEvenement = new Evenement();
-
-    this.router.navigate(['/event']);
-  }
+  alert('Erreur HTTP: ' + err.status);
+}
+    });
+}
 }

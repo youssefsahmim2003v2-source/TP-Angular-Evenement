@@ -1,3 +1,8 @@
+<h2>DEBUG: {{ evenements.length }} événements</h2>
+
+@for (e of evenements; track e.idEvenement) {
+    <p>{{ e.nomEvenement }}</p>
+}
 <div class="container">
     <div class="card shadow mb-4">
         <div class="card-body">
@@ -10,54 +15,48 @@
                         <th>Lieu</th>
                         <th>Prix</th>
                         <th>Date de l'événement</th>
-                        <th>Actions</th>
+                        @if (authService.isAdmin()) {
+                            <th>Actions</th>
+                        }
                     </tr>
                 </thead>
 
-                <!--<tbody>
-          <tr *ngFor="let evenement of evenements">
-            <td>{{ evenement }}</td>
-            </tr>
-        </tbody> -->
-
                 <tbody>
-                    @for (evenement of evenements;
+                    @for (evenement of evenements; track evenement.idEvenement; let pos = $index) {
+                        <tr>
+                            <td>{{ pos + 1 }}</td>
+                            <td>{{ evenement.idEvenement }}</td>
+                            <td>{{ evenement.nomEvenement }}</td>
+                            <td>{{ evenement.lieu.nomLieu }}</td>
+                            <td>{{ evenement.prixEvenement }}</td>
+                            <td>{{ evenement.dateEvenement | date:'dd/MM/yyyy' }}</td>
 
-                    track evenement.idEvenement;
-                    let pos=$index ; let nbr=$count;
-                    let first = $first;
-                    let last = $last) {
-
-                    <tr>
-                        <td>{{ pos+1}}</td>
-                        <td>{{ evenement.idEvenement }}</td>
-                        <td>{{ evenement.nomEvenement }}</td>
-                        <td>{{ evenement.lieu.nomLieu }}</td>
-                        <td>{{ evenement.prixEvenement }}</td>
-                        <td>{{ evenement.dateEvenement | date:'dd/MM/yyyy' }}</td>
-                        <td>
                             @if (authService.isAdmin()) {
-                            <button class="btn btn-danger" (click)="supprimerEvenement(evenement)">
-                                Supprimer
-                            </button>
+                                <td>
+                                    <button class="btn btn-danger"
+                                        (click)="supprimerEvenement(evenement)">
+                                        Supprimer
+                                    </button>
 
-                            <a class="btn btn-success ms-2" [routerLink]="['/update-evenement', evenement.idEvenement]">
-                                Modifier
-                            </a>
+                                    <a class="btn btn-success ms-2"
+                                        [routerLink]="['/update-evenement', evenement.idEvenement]">
+                                        Modifier
+                                    </a>
+                                </td>
                             }
-                        </td>
-
-                    </tr>
-                    @if(last)
-                    {
-                    <h1>{{nbr}} evenements </h1>}
+                        </tr>
                     }
                     @empty {
-                    <h1>Aucun evenement trouvé !</h1>
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                Aucun evenement trouvé !
+                            </td>
+                        </tr>
                     }
                 </tbody>
-
             </table>
+            <p>Number of events: {{ evenements.length }}</p>
         </div>
     </div>
 </div>
+ 
